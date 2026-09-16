@@ -13,7 +13,7 @@ export interface TelegramUser {
   auth_date: number
 }
 
-function getRequiredEnv(name: "TELEGRAM_BOT_TOKEN" | "AUTH_SESSION_SECRET") {
+function getRequiredEnv(name: "TELEGRAM_BOT_TOKEN" | "NEXT_AUTH_SESSION_SECRET") {
   const value = process.env[name]
   if (!value) throw new Error(`${name} is not configured`)
   return value
@@ -50,7 +50,7 @@ export function verifyTelegramAuth(params: URLSearchParams) {
 }
 
 function signSession(payload: string) {
-  return createHmac("sha256", getRequiredEnv("AUTH_SESSION_SECRET")).update(payload).digest("base64url")
+  return createHmac("sha256", getRequiredEnv("NEXT_AUTH_SESSION_SECRET")).update(payload).digest("base64url")
 }
 
 export function createSession(user: TelegramUser) {

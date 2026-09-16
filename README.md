@@ -22,15 +22,22 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 ## Telegram authentication
 
-Create a bot with BotFather and configure these variables locally and in Vercel:
+Configure the Telegram Login OIDC application in BotFather and add these variables locally and in Vercel:
 
 ```env
-NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=your_bot_username
-TELEGRAM_BOT_TOKEN=123456789:your_bot_token
-AUTH_SESSION_SECRET=replace_with_a_long_random_secret
+NEXT_PUBLIC_TELEGRAM_CLIENT_ID=your_client_id
+NEXT_TELEGRAM_CLIENT_SECRET=your_client_secret
+NEXT_AUTH_SESSION_SECRET=replace_with_a_long_random_secret
 ```
 
-The bot username is public, but the token and session secret must stay private. In BotFather, run `/setdomain` and set it to `reel-mocha.vercel.app` (or your actual production domain). The callback is `/api/auth/telegram`; the current session can be read from `/api/auth/me` and cleared with `POST /api/auth/logout`.
+In BotFather, open the bot's Login Widget settings and add these allowed URLs:
+
+```text
+https://reel-mocha.vercel.app
+https://reel-mocha.vercel.app/api/auth/telegram/callback
+```
+
+The application uses PKCE and state protection. The callback exchanges the authorization code and validates the ID token against Telegram's JWKS. The current session can be read from `/api/auth/me` and cleared with `POST /api/auth/logout`.
 
 ## Learn More
 
