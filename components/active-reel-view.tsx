@@ -18,7 +18,9 @@ export function ActiveReelView({ id }: { id: string }) {
   const [isSpinning, setIsSpinning] = useState(false)
   const [spinRound, setSpinRound] = useState(0)
   const [spinDuration, setSpinDuration] = useState(10_000)
+  const [spinProgress, setSpinProgress] = useState(0)
   const finishTimerRef = useRef<number | null>(null)
+  const spinFrameRef = useRef<number | null>(null)
 
   useEffect(() => {
     const updateSizes = () => {
@@ -56,8 +58,10 @@ export function ActiveReelView({ id }: { id: string }) {
   const handleSpin = async () => {
     if (!reel || spin.isPending || isSpinning || !cardWidth || !viewportWidth) return
 
+    if (spinFrameRef.current) window.cancelAnimationFrame(spinFrameRef.current)
     setIsSpinning(true)
     setWinnerIndex(null)
+    setSpinProgress(0)
 
     try {
       const result = await spin.mutateAsync()
@@ -70,12 +74,30 @@ export function ActiveReelView({ id }: { id: string }) {
       setSpinDuration(duration)
       setOffset(targetOffset)
       setSpinRound((round) => round + 1)
+
+      const startedAt = performance.now()
+      const updateProgress = (now: number) => {
+        const progress = Math.min((now - startedAt) / duration, 1)
+        setSpinProgress(progress)
+
+        if (progress < 1) {
+          spinFrameRef.current = window.requestAnimationFrame(updateProgress)
+          return
+        }
+
+        spinFrameRef.current = null
+      }
+
+      spinFrameRef.current = window.requestAnimationFrame(updateProgress)
+
       finishTimerRef.current = window.setTimeout(() => {
         setWinnerIndex(result.winnerIndex)
         setIsSpinning(false)
+        setSpinProgress(1)
       }, duration)
     } catch {
       setIsSpinning(false)
+      setSpinProgress(0)
     }
   }
 
@@ -128,12 +150,13 @@ export function ActiveReelView({ id }: { id: string }) {
                   >
                     {trackUsers.map((user, index) => {
                       const accent = palette[index % palette.length]
+                      const cardBlur = isSpinning ? Math.max(0, 4 * (1 - spinProgress)) : 0
 
                       return (
                         <motion.div
                           animate={
                             isSpinning
-                              ? { scale: 0.98, filter: "blur(2px)" }
+                              ? { scale: 0.98, filter: `blur(${cardBlur}px)` }
                               : { scale: 1, filter: "blur(0px)" }
                           }
                           className="flex h-24 w-40 shrink-0 items-center justify-center rounded-2xl border border-white/80 px-3 text-center font-bold text-violet-950 shadow-[0_10px_18px_rgba(58,46,94,0.07)] sm:w-52"

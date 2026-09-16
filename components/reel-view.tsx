@@ -46,15 +46,6 @@ export function ReelView({ id }: { id: string }) {
                         <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: tone }} />
                         <span className="font-medium text-violet-950">{user.name}</span>
                       </div>
-                      {user.exclude && (
-                        <span
-                          aria-label="Участник исключён"
-                          className="inline-flex items-center rounded-full border border-rose-200 bg-rose-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-rose-600"
-                          title="Участник исключён"
-                        >
-                          excluded
-                        </span>
-                      )}
                     </div>
                   )
                 })}
