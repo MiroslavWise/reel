@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 
+import { ReelsList } from "@/components/reels-list"
 import { useAuthStore } from "@/stores/auth"
 
 export default function Home() {
@@ -19,6 +20,10 @@ export default function Home() {
             Создать
           </Link>
         )}
+        <div className="w-full border-t border-zinc-100 pt-6">
+          <h2 className="mb-3 text-left text-lg font-semibold">Мои колёса</h2>
+          <ReelsList />
+        </div>
       </main>
     </div>
   )

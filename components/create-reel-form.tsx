@@ -62,7 +62,6 @@ export function CreateReelForm() {
             Добавить
           </button>
         </div>
-
         <div className="space-y-3">
           {fields.map((field, index) => (
             <div className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3 sm:flex sm:items-end sm:gap-3 sm:space-y-0" key={field.id}>
