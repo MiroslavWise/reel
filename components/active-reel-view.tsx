@@ -77,7 +77,7 @@ export function ActiveReelView({ id }: { id: string }) {
   }
 
   return (
-    <div className="relative flex  pt-20 flex-col items-center overflow-hidden bg-zinc-50 px-6 text-zinc-950">
+    <div className="relative flex min-h-dvh pt-20 flex-col items-center overflow-hidden bg-zinc-50 px-6 text-zinc-950">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none overflow-hidden">
         {floatingUsers.map((user) => (
           <span
