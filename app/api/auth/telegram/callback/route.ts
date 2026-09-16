@@ -34,7 +34,9 @@ export async function GET(request: NextRequest) {
     response.cookies.delete(stateCookieName)
     response.cookies.delete(verifierCookieName)
     return response
-  } catch {
+  } catch (error) {
+     console.error("[telegram-auth] callback failed", error)
+     
     redirectUrl.searchParams.set("auth", "failed")
     return NextResponse.redirect(redirectUrl)
   }
