@@ -51,20 +51,14 @@ export function CreateReelForm() {
 
       <div className="space-y-3 text-left">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="font-medium">Участники</h2>
-          </div>
-          <button
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 transition hover:bg-zinc-100"
-            onClick={() => append({ name: "", exclude: false })}
-            type="button"
-          >
-            Добавить
-          </button>
+          <h2 className="font-medium">Участники</h2>
         </div>
         <div className="space-y-3">
           {fields.map((field, index) => (
-            <div className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3 sm:flex sm:items-end sm:gap-3 sm:space-y-0" key={field.id}>
+            <div
+              className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3 sm:flex sm:items-end sm:gap-3 sm:space-y-0"
+              key={field.id}
+            >
               <div className="min-w-0 sm:flex-1">
                 <label className="mb-1 block text-xs font-medium text-zinc-600" htmlFor={`user-${field.id}`}>
                   Имя участника
@@ -90,6 +84,15 @@ export function CreateReelForm() {
               </div>
             </div>
           ))}
+        </div>
+        <div className="flex justify-end">
+          <button
+            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 transition hover:bg-zinc-100"
+            onClick={() => append({ name: "", exclude: false })}
+            type="button"
+          >
+            Добавить
+          </button>
         </div>
         {errors.users?.message && <p className="text-sm text-red-600">{errors.users.message}</p>}
       </div>

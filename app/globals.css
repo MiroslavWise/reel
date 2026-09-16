@@ -24,3 +24,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes reel-float {
+  0%,
+  100% {
+    margin-left: -18px;
+    margin-top: -10px;
+    opacity: 0.3;
+  }
+
+  50% {
+    margin-left: 18px;
+    margin-top: 14px;
+    opacity: 0.75;
+  }
+}

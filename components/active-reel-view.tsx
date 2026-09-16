@@ -36,6 +36,20 @@ export function ActiveReelView({ id }: { id: string }) {
     return Array.from({ length: Math.max(24, spinRound + 12) }, () => reel.users).flat()
   }, [reel?.users, spinRound])
 
+  const floatingUsers = useMemo(() => {
+    if (!reel?.users.length) return []
+
+    return reel.users.map((user, index) => ({
+      ...user,
+      left: 4 + Math.random() * 88,
+      top: 8 + Math.random() * 80,
+      duration: 14 + Math.random() * 12,
+      delay: -(Math.random() * 14),
+      rotation: -8 + Math.random() * 16,
+      index,
+    }))
+  }, [reel?.users])
+
   const handleSpin = async () => {
     if (!reel || spin.isPending || isSpinning || !cardWidth || !viewportWidth) return
 
@@ -63,8 +77,26 @@ export function ActiveReelView({ id }: { id: string }) {
   }
 
   return (
-    <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-950">
-      <main className="w-full max-w-4xl rounded-2xl bg-white p-6 text-center shadow-sm sm:p-10">
+    <div className="relative flex min-h-[calc(100dvh-4rem)] flex-col items-center overflow-hidden bg-zinc-50 px-6 text-zinc-950">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none overflow-hidden">
+        {floatingUsers.map((user) => (
+          <span
+            className="absolute max-w-[35vw] truncate text-lg font-semibold text-sky-900/10 animate-[reel-float_linear_infinite] sm:text-2xl"
+            key={`${user.name}-${user.index}`}
+            style={{
+              left: `${user.left}%`,
+              top: `${user.top}%`,
+              animationDelay: `${user.delay}s`,
+              animationDuration: `${user.duration}s`,
+              transform: `rotate(${user.rotation}deg)`,
+            }}
+          >
+            {user.name}
+          </span>
+        ))}
+      </div>
+
+      <main className="relative z-10 w-full max-w-4xl rounded-2xl bg-white p-6 text-center shadow-sm sm:p-10">
         {error ? (
           <p className="text-red-600">{error.message}</p>
         ) : isPending || !reel ? (
