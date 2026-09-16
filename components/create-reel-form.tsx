@@ -53,7 +53,6 @@ export function CreateReelForm() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="font-medium">Участники</h2>
-            <p className="text-sm text-zinc-500">Добавьте имена и исключите тех, кто не должен выпадать.</p>
           </div>
           <button
             className="rounded-lg border border-zinc-300 px-3 py-2 text-sm text-zinc-900 transition hover:bg-zinc-100"
@@ -66,10 +65,10 @@ export function CreateReelForm() {
 
         <div className="space-y-3">
           {fields.map((field, index) => (
-            <div className="flex items-start gap-3" key={field.id}>
-              <div className="min-w-0 flex-1">
+            <div className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50 p-3 sm:flex sm:items-end sm:gap-3 sm:space-y-0" key={field.id}>
+              <div className="min-w-0 sm:flex-1">
                 <label className="mb-1 block text-xs font-medium text-zinc-600" htmlFor={`user-${field.id}`}>
-                  name — имя участника
+                  Имя участника
                 </label>
                 <input
                   className="w-full rounded-lg border border-zinc-300 px-3 py-2 outline-none transition focus:border-zinc-950"
@@ -79,15 +78,17 @@ export function CreateReelForm() {
                 />
                 {errors.users?.[index]?.name && <p className="mt-1 text-sm text-red-600">{errors.users[index]?.name?.message}</p>}
               </div>
-              <label className="flex shrink-0 items-center gap-2 pt-6 text-sm text-zinc-700">
-                <input type="checkbox" {...register(`users.${index}.exclude`)} />
-                exclude — исключить при прокрутке
-              </label>
-              {fields.length > 1 && (
-                <button className="pt-2 text-sm text-red-600 hover:text-red-800" onClick={() => remove(index)} type="button">
-                  Удалить
-                </button>
-              )}
+              <div className="flex items-center justify-between gap-3 sm:shrink-0">
+                <label className="flex items-center gap-2 text-sm text-zinc-700">
+                  <input className="h-4 w-4 accent-zinc-950" type="checkbox" {...register(`users.${index}.exclude`)} />
+                  <span>Исключить</span>
+                </label>
+                {fields.length > 1 && (
+                  <button className="text-sm text-red-600 hover:text-red-800" onClick={() => remove(index)} type="button">
+                    Удалить
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
