@@ -20,6 +20,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Telegram authentication
+
+Create a bot with BotFather and configure these variables locally and in Vercel:
+
+```env
+NEXT_PUBLIC_TELEGRAM_BOT_USERNAME=your_bot_username
+TELEGRAM_BOT_TOKEN=123456789:your_bot_token
+AUTH_SESSION_SECRET=replace_with_a_long_random_secret
+```
+
+The bot username is public, but the token and session secret must stay private. In BotFather, run `/setdomain` and set it to `reel-mocha.vercel.app` (or your actual production domain). The callback is `/api/auth/telegram`; the current session can be read from `/api/auth/me` and cleared with `POST /api/auth/logout`.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
