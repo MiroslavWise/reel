@@ -1,5 +1,11 @@
+import type { Metadata } from "next"
+
 import { AdminPage } from "@/components/admin-page"
 import { CreateReelForm } from "@/components/create-reel-form"
+
+export const metadata: Metadata = {
+  title: "Создать колесо | Reel",
+}
 
 export default function NewPage() {
   return (
