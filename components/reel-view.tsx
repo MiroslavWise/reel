@@ -12,7 +12,7 @@ export function ReelView({ id }: { id: string }) {
   return (
     <div className="min-h-dvh px-4 pb-16 pt-24 sm:px-6">
       <main className="mx-auto w-full max-w-3xl fade-in-up">
-        <div className="glass-panel rounded-[2rem] p-5 sm:p-8">
+        <div className="glass-panel rounded-4xl p-5 sm:p-8">
           {error ? (
             <p className="text-rose-600">{error.message}</p>
           ) : isPending || !reel ? (
