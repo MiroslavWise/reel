@@ -24,7 +24,7 @@ export function Header() {
             className="inline-flex items-center gap-2 text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-950"
             href="/"
           >
-            <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="h-5 w-5 animate-[spin_2s_linear_infinite]" fill="none" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" />
               <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.8" />
               <path d="m12 3.5 0 6.5m0 4v6.5m8.5-8.5H14m-4 0H3.5" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
