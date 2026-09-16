@@ -15,10 +15,16 @@ export async function GET(request: NextRequest) {
   const reels = await prisma.reel.findMany({
     where: { telegramId: BigInt(session.user.id) },
     orderBy: { id: "desc" },
-    select: { id: true, name: true },
+    select: { id: true, name: true, users: true },
   })
 
-  return NextResponse.json({ reels })
+  return NextResponse.json({
+    reels: reels.map((reel) => ({
+      id: reel.id,
+      name: reel.name,
+      usersCount: Array.isArray(reel.users) ? reel.users.length : 0,
+    })),
+  })
 }
 
 export async function POST(request: NextRequest) {

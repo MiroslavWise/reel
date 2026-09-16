@@ -10,6 +10,9 @@ export const createReelSchema = object({
 			}),
 		)
 		.min(1, "Добавьте хотя бы одного участника")
+		.test("has-playable-user", "Хотя бы один участник должен быть доступен для выпадения", (users) =>
+			Array.isArray(users) && users.some((user) => user?.exclude === false),
+		)
 		.required(),
 })
 

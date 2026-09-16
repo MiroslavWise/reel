@@ -9,6 +9,7 @@ import { useAuthStore } from "@/stores/auth"
 interface ReelSummary {
   id: string
   name: string
+  usersCount: number
 }
 
 export function ReelsList() {
@@ -54,8 +55,13 @@ export function ReelsList() {
   return (
     <div className="w-full space-y-2 text-left">
       {reels.map((reel) => (
-        <Link className="block rounded-xl border border-zinc-200 px-4 py-3 transition hover:border-zinc-400 hover:bg-zinc-50" href={`/reel/${reel.id}`} key={reel.id}>
+        <Link
+          className="flex items-center justify-between gap-4 rounded-xl border border-zinc-200 px-4 py-3 transition hover:border-zinc-400 hover:bg-zinc-50"
+          href={`/reel/${reel.id}`}
+          key={reel.id}
+        >
           <span className="font-medium text-zinc-950">{reel.name}</span>
+          <span className="shrink-0 text-sm text-zinc-500">{reel.usersCount} уч.</span>
         </Link>
       ))}
     </div>
