@@ -14,6 +14,7 @@ export function ActiveReelView({ id }: { id: string }) {
   const [winnerIndex, setWinnerIndex] = useState<number | null>(null)
   const [isSpinning, setIsSpinning] = useState(false)
   const [spinRound, setSpinRound] = useState(0)
+  const [spinDuration, setSpinDuration] = useState(10_000)
   const finishTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -47,13 +48,15 @@ export function ActiveReelView({ id }: { id: string }) {
       const targetIndex = cycle * reel.users.length + result.winnerIndex
       const gap = 12
       const targetOffset = targetIndex * (cardWidth + gap) - (viewportWidth - cardWidth) / 2
+      const duration = 9_000 + Math.floor(Math.random() * 3_001)
 
+      setSpinDuration(duration)
       setOffset(targetOffset)
       setSpinRound((round) => round + 1)
       finishTimerRef.current = window.setTimeout(() => {
         setWinnerIndex(result.winnerIndex)
         setIsSpinning(false)
-      }, 4500)
+      }, duration)
     } catch {
       setIsSpinning(false)
     }
@@ -74,8 +77,12 @@ export function ActiveReelView({ id }: { id: string }) {
               <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-1 -translate-x-1/2 bg-sky-500 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]" />
               <div className="w-full overflow-x-hidden overflow-y-hidden rounded-xl border border-zinc-200 bg-zinc-100 py-4" ref={viewportRef}>
                 <div
-                  className="flex w-max flex-nowrap gap-3 transition-transform duration-4500 ease-out"
-                  style={{ transform: `translateX(-${offset}px)` }}
+                  className="flex w-max flex-nowrap gap-3 transition-transform ease-out"
+                  style={{
+                    transform: `translateX(-${offset}px)`,
+                    transitionDuration: `${spinDuration}ms`,
+                    transitionTimingFunction: "cubic-bezier(0.05, 0.7, 0.15, 1)",
+                  }}
                 >
                   {trackUsers.map((user, index) => (
                     <div

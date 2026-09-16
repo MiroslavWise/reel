@@ -27,7 +27,10 @@ export function ReelView({ id }: { id: string }) {
                   className="flex items-center justify-between rounded-lg border border-zinc-200 px-4 py-3"
                   key={`${user.name}-${index}`}
                 >
-                  <span className={user.exclude ? "line-through text-zinc-500" : undefined}>{user.name}</span>
+                  <span>{user.name}</span>
+                  {user.exclude && (
+                    <span aria-label="Участник исключён" className="h-2.5 w-2.5 shrink-0 rounded-full bg-pink-400" title="Участник исключён" />
+                  )}
                 </div>
               ))}
             </div>

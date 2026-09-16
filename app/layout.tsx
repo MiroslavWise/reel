@@ -24,10 +24,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col overflow-x-hidden">
         <Header />
         <QueryProvider>
-          <main className="flex-1 pt-16">{children}</main>
+          <main className="min-h-screen flex-1 overflow-x-hidden pt-16">{children}</main>
         </QueryProvider>
       </body>
     </html>
