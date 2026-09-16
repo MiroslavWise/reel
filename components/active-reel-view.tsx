@@ -71,11 +71,14 @@ export function ActiveReelView({ id }: { id: string }) {
           <p className="text-zinc-500">Загружаем колесо...</p>
         ) : (
           <>
-            <h1 className="text-3xl font-semibold tracking-tight">{reel.name}</h1>
+            <h2 className="text-2xl font-semibold tracking-tight">{reel.name}</h2>
             <p className="mt-2 text-zinc-600">Нажмите, чтобы запустить колесо</p>
             <div className="relative mt-10 min-w-0">
               <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-1 -translate-x-1/2 bg-sky-500 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]" />
-              <div className="w-full overflow-x-hidden overflow-y-hidden rounded-xl border border-zinc-200 bg-zinc-100 py-4" ref={viewportRef}>
+              <div
+                className="w-full overflow-x-hidden overflow-y-hidden rounded-xl border border-zinc-200 bg-zinc-100 py-4"
+                ref={viewportRef}
+              >
                 <div
                   className="flex w-max flex-nowrap gap-3 transition-transform ease-out"
                   style={{
@@ -86,14 +89,9 @@ export function ActiveReelView({ id }: { id: string }) {
                 >
                   {trackUsers.map((user, index) => (
                     <div
-                      className={`flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-white/60 px-3 text-center font-medium text-zinc-950 shadow-sm sm:w-52 ${[
-                        "bg-sky-300",
-                        "bg-amber-300",
-                        "bg-emerald-300",
-                        "bg-rose-300",
-                        "bg-violet-300",
-                        "bg-orange-300",
-                      ][index % 6]}`}
+                      className={`flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-white/60 px-3 text-center font-medium text-zinc-950 shadow-sm sm:w-52 ${
+                        ["bg-sky-300", "bg-amber-300", "bg-emerald-300", "bg-rose-300", "bg-violet-300", "bg-orange-300"][index % 6]
+                      }`}
                       key={`${user.name}-${index}`}
                       ref={index === 0 ? cardRef : undefined}
                     >

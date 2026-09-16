@@ -16,7 +16,7 @@ export function ReelView({ id }: { id: string }) {
         ) : (
           <>
             <div className="flex items-center justify-between gap-4">
-              <h1 className="text-3xl font-semibold tracking-tight">{reel.name}</h1>
+              <h2 className="text-2xl font-semibold tracking-tight">{reel.name}</h2>
               <Link className="shrink-0 rounded-lg bg-zinc-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800" href={`/active/${reel.id}`}>
                 Запустить
               </Link>
