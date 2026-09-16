@@ -12,6 +12,8 @@ interface ReelSummary {
   usersCount: number
 }
 
+const reelAccent = ["#8a7dff", "#ff7ec9", "#6ec9ff", "#7aeac4", "#ffbc7d"]
+
 export function ReelsList() {
   const status = useAuthStore((state) => state.status)
   const [reels, setReels] = useState<ReelSummary[]>([])
@@ -46,24 +48,36 @@ export function ReelsList() {
     }
   }, [status])
 
-  if (status === AuthStatus.PENDING) return <p className="text-sm text-zinc-500">Загружаем колёса...</p>
-  if (status !== AuthStatus.AUTHENTICATED) return <p className="text-sm text-zinc-500">Войдите, чтобы увидеть свои колёса.</p>
-  if (isLoading) return <p className="text-sm text-zinc-500">Загружаем колёса...</p>
-  if (error) return <p className="text-sm text-red-600">{error}</p>
-  if (!reels.length) return <p className="text-sm text-zinc-500">У вас пока нет колёс.</p>
+  if (status === AuthStatus.PENDING) return <p className="text-sm text-violet-700/75">Загружаем колёса...</p>
+  if (status !== AuthStatus.AUTHENTICATED) return <p className="text-sm text-violet-700/75">Войдите, чтобы увидеть свои колёса.</p>
+  if (isLoading) return <p className="text-sm text-violet-700/75">Загружаем колёса...</p>
+  if (error) return <p className="text-sm text-rose-600">{error}</p>
+  if (!reels.length) return <p className="text-sm text-violet-700/75">У вас пока нет колёс.</p>
 
   return (
-    <div className="w-full space-y-2 text-left">
-      {reels.map((reel) => (
-        <Link
-          className="flex items-center justify-between gap-4 rounded-xl border border-zinc-200 px-4 py-3 transition hover:border-zinc-400 hover:bg-zinc-50"
-          href={`/reel/${reel.id}`}
-          key={reel.id}
-        >
-          <span className="font-medium text-zinc-950">{reel.name}</span>
-          <span className="shrink-0 text-sm text-zinc-500">{reel.usersCount} уч.</span>
-        </Link>
-      ))}
+    <div className="w-full space-y-3 text-left">
+      {reels.map((reel, index) => {
+        const accent = reelAccent[index % reelAccent.length]
+
+        return (
+          <Link
+            className="group flex items-center justify-between gap-4 rounded-2xl border border-violet-100 bg-white/75 px-4 py-3.5 shadow-[0_12px_30px_rgba(120,90,175,0.08)] transition-all duration-200 hover:-translate-y-0.5 hover:border-violet-200 hover:bg-white"
+            href={`/reel/${reel.id}`}
+            key={reel.id}
+            style={{
+              backgroundImage: `linear-gradient(90deg, ${accent}22 0, ${accent}22 6px, rgba(255,255,255,0.82) 6px)`,
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <span aria-hidden="true" className="h-3 w-3 rounded-full" style={{ background: accent }} />
+              <span className="font-semibold text-violet-950">{reel.name}</span>
+            </div>
+            <span className="shrink-0 rounded-full border border-violet-200 bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-800">
+              {reel.usersCount} уч.
+            </span>
+          </Link>
+        )
+      })}
     </div>
   )
 }

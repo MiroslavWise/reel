@@ -3,7 +3,7 @@
 export function TelegramLogin() {
   return (
     <a
-      className="inline-flex items-center gap-2 rounded-lg bg-sky-500 px-5 py-3 font-medium text-white transition-colors hover:bg-sky-600"
+      className="primary-button inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-bold shadow-lg"
       href="/api/auth/telegram/login"
     >
       <svg aria-hidden="true" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">

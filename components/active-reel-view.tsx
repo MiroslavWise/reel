@@ -1,8 +1,11 @@
 "use client"
 
+import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useReelPlayback } from "@/hooks/use-reel"
+
+const palette = ["#8a7dff", "#ff7ec9", "#6ec9ff", "#7aeac4", "#ffbc7d", "#ff6f91"]
 
 export function ActiveReelView({ id }: { id: string }) {
   const { data: reel, error, isPending, spin } = useReelPlayback(id)
@@ -41,11 +44,11 @@ export function ActiveReelView({ id }: { id: string }) {
 
     return reel.users.map((user, index) => ({
       ...user,
-      left: 4 + Math.random() * 88,
-      top: 8 + Math.random() * 80,
-      duration: 14 + Math.random() * 12,
-      delay: -(Math.random() * 14),
-      rotation: -8 + Math.random() * 16,
+      left: 4 + ((index * 13) % 82),
+      top: 10 + ((index * 19) % 72),
+      duration: 14 + (index % 6) * 2,
+      delay: -((index % 8) * 1.7),
+      rotation: -8 + (index % 9) * 2,
       index,
     }))
   }, [reel?.users])
@@ -77,11 +80,11 @@ export function ActiveReelView({ id }: { id: string }) {
   }
 
   return (
-    <div className="relative flex min-h-dvh pt-20 flex-col items-center overflow-hidden bg-zinc-50 px-6 text-zinc-950">
+    <div className="relative flex min-h-dvh flex-col items-center overflow-hidden px-4 pb-16 pt-24 text-foreground sm:px-6">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none overflow-hidden">
         {floatingUsers.map((user) => (
           <span
-            className="absolute max-w-[35vw] truncate text-lg font-semibold text-sky-900/10 animate-[reel-float_linear_infinite] sm:text-2xl"
+            className="reel-name-float absolute max-w-[35vw] truncate text-lg font-semibold text-violet-900/15 sm:text-2xl"
             key={`${user.name}-${user.index}`}
             style={{
               left: `${user.left}%`,
@@ -96,72 +99,122 @@ export function ActiveReelView({ id }: { id: string }) {
         ))}
       </div>
 
-      <main className="relative z-10 w-full max-w-4xl rounded-2xl bg-white p-6 text-center shadow-sm sm:p-10">
-        {error ? (
-          <p className="text-red-600">{error.message}</p>
-        ) : isPending || !reel ? (
-          <p className="text-zinc-500">Загружаем колесо...</p>
-        ) : (
-          <>
-            <h2 className="text-2xl font-semibold tracking-tight">{reel.name}</h2>
-            <p className="mt-2 text-zinc-600">Нажмите, чтобы запустить колесо</p>
-            <div className="relative mt-10 min-w-0">
-              <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-1 -translate-x-1/2 bg-sky-500 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]" />
-              <div
-                className="w-full overflow-x-hidden overflow-y-hidden rounded-xl border border-zinc-200 bg-zinc-100 py-4"
-                ref={viewportRef}
-              >
+      <main className="relative z-10 w-full max-w-5xl fade-in-up">
+        <div className="glass-panel rounded-4xl p-5 sm:p-8">
+          {error ? (
+            <p className="text-rose-600">{error.message}</p>
+          ) : isPending || !reel ? (
+            <p className="text-violet-700/75">Загружаем колесо...</p>
+          ) : (
+            <>
+              <div className="mb-6 text-center">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-violet-700">reel</p>
+                <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
+                  <span className="gradient-title">{reel.name}</span>
+                </h2>
+                <p className="mt-2 text-sm text-violet-800/75">Нажмите, чтобы запустить вращение и выбрать победителя.</p>
+              </div>
+
+              <div className="relative mt-8 min-w-0">
+                <div className="reel-indicator" aria-hidden="true" />
                 <div
-                  className="flex w-max flex-nowrap gap-3 transition-transform ease-out"
-                  style={{
-                    transform: `translateX(-${offset}px)`,
-                    transitionDuration: `${spinDuration}ms`,
-                    transitionTimingFunction: "cubic-bezier(0.05, 0.7, 0.15, 1)",
-                  }}
+                  className="w-full overflow-hidden rounded-[1.75rem] border border-violet-100 bg-linear-to-r from-violet-50 via-white to-pink-50 px-3 py-4 shadow-[inset_0_0_30px_rgba(255,255,255,0.8)] sm:px-4"
+                  ref={viewportRef}
                 >
-                  {trackUsers.map((user, index) => (
-                    <div
-                      className={`flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-white/60 px-3 text-center font-medium text-zinc-950 shadow-sm sm:w-52 ${
-                        ["bg-sky-300", "bg-amber-300", "bg-emerald-300", "bg-rose-300", "bg-violet-300", "bg-orange-300"][index % 6]
-                      }`}
-                      key={`${user.name}-${index}`}
-                      ref={index === 0 ? cardRef : undefined}
-                    >
-                      {user.name}
-                    </div>
-                  ))}
+                  <motion.div
+                    animate={{ x: -offset }}
+                    className="flex w-max flex-nowrap gap-3"
+                    transition={{ duration: spinDuration / 1000, ease: [0.05, 0.7, 0.15, 1] }}
+                  >
+                    {trackUsers.map((user, index) => {
+                      const accent = palette[index % palette.length]
+
+                      return (
+                        <motion.div
+                          animate={
+                            isSpinning
+                              ? { scale: 0.98, filter: "blur(2px)" }
+                              : { scale: 1, filter: "blur(0px)" }
+                          }
+                          className="flex h-24 w-40 shrink-0 items-center justify-center rounded-2xl border border-white/80 px-3 text-center font-bold text-violet-950 shadow-[0_10px_18px_rgba(58,46,94,0.07)] sm:w-52"
+                          key={`${user.name}-${index}`}
+                          ref={index === 0 ? cardRef : undefined}
+                          style={{
+                            background: `linear-gradient(180deg, rgba(255,255,255,0.7), ${accent}33 28%, ${accent}59 100%)`,
+                            boxShadow: `0 0 0 1px rgba(255,255,255,0.6), 0 18px 32px ${accent}26`,
+                          }}
+                          transition={{ duration: 0.22 }}
+                        >
+                          <span className="max-w-full truncate px-2 text-sm sm:text-base">{user.name}</span>
+                        </motion.div>
+                      )
+                    })}
+                  </motion.div>
                 </div>
               </div>
-            </div>
-            <button
-              className="mt-8 rounded-lg bg-zinc-950 px-8 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={spin.isPending || isSpinning}
-              onClick={() => void handleSpin()}
-              type="button"
-            >
-              {spin.isPending || isSpinning ? "Колесо крутится..." : "Запустить"}
-            </button>
-            {spin.error && <p className="mt-4 text-red-600">{spin.error.message}</p>}
-          </>
-        )}
-      </main>
-      {winnerIndex !== null && reel && (
-        <div className="fixed inset-0 z-100 flex items-center justify-center bg-zinc-950/90 px-6 text-center text-white backdrop-blur-sm">
-          <div className="w-full max-w-xl rounded-3xl bg-linear-to-br from-sky-400 via-violet-400 to-rose-400 p-1 shadow-2xl">
-            <div className="rounded-[calc(1.5rem-4px)] bg-zinc-950 px-8 py-12 sm:px-16">
-              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-300">Победитель</p>
-              <h2 className="mt-5 wrap-break-word text-5xl font-black tracking-tight sm:text-7xl">{reel.users[winnerIndex]?.name}</h2>
-              <button
-                className="mt-10 rounded-lg bg-white px-6 py-3 font-semibold text-zinc-950 transition hover:bg-zinc-200"
-                onClick={() => setWinnerIndex(null)}
-                type="button"
-              >
-                Продолжить
-              </button>
-            </div>
-          </div>
+
+              <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+                <button
+                  className="primary-button inline-flex items-center justify-center rounded-2xl px-7 py-3 text-base font-bold disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={spin.isPending || isSpinning}
+                  onClick={() => void handleSpin()}
+                  type="button"
+                >
+                  {spin.isPending || isSpinning ? "Колесо крутится..." : "Запустить"}
+                </button>
+              </div>
+
+              {spin.error && <p className="mt-4 text-center text-rose-600">{spin.error.message}</p>}
+            </>
+          )}
         </div>
-      )}
+      </main>
+
+      <AnimatePresence>
+        {winnerIndex !== null && reel && (
+          <motion.div
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-violet-950/70 px-6 text-center backdrop-blur-sm"
+            exit={{ opacity: 0 }}
+            initial={{ opacity: 0 }}
+          >
+            <motion.div
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              className="w-full max-w-xl rounded-4xl p-px shadow-[0_30px_80px_rgba(138,125,255,0.45)]"
+              initial={{ scale: 0.9, opacity: 0, y: 40 }}
+              style={{ background: "linear-gradient(135deg, #8a7dff 0%, #ff7ec9 35%, #6ec9ff 100%)" }}
+              transition={{ type: "spring", stiffness: 180, damping: 18 }}
+            >
+              <div className="rounded-[calc(2rem-1px)] bg-[#130d29] px-7 py-10 sm:px-12">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-violet-200">Победитель</p>
+                <div className="mt-5 flex justify-center text-5xl sm:text-7xl">🎉</div>
+                <h3 className="mt-4 wrap-break-word text-4xl font-black tracking-tight text-white sm:text-6xl">
+                  {reel.users[winnerIndex]?.name}
+                </h3>
+                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                  <button
+                    className="primary-button rounded-2xl px-5 py-3 text-sm font-bold"
+                    onClick={() => {
+                      setWinnerIndex(null)
+                      void handleSpin()
+                    }}
+                    type="button"
+                  >
+                    Крутить ещё
+                  </button>
+                  <button
+                    className="secondary-button rounded-2xl px-5 py-3 text-sm font-bold"
+                    onClick={() => setWinnerIndex(null)}
+                    type="button"
+                  >
+                    Закрыть
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
