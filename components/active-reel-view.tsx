@@ -63,7 +63,7 @@ export function ActiveReelView({ id }: { id: string }) {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-950">
+    <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-950">
       <main className="w-full max-w-4xl rounded-2xl bg-white p-6 text-center shadow-sm sm:p-10">
         {error ? (
           <p className="text-red-600">{error.message}</p>

@@ -7,8 +7,8 @@ export function ReelView({ id }: { id: string }) {
   const { data: reel, error, isPending } = useReel(id)
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-zinc-50 px-6 py-10 text-zinc-950">
-      <main className="mx-auto w-full max-w-2xl rounded-2xl bg-white p-6 shadow-sm sm:p-10">
+    <div className="min-h-[calc(100dvh-4rem)] bg-zinc-50 px-6 py-10 text-zinc-950">
+      <main className="mx-auto w-full max-w-2xl bg-white">
         {error ? (
           <p className="text-red-600">{error.message}</p>
         ) : isPending || !reel ? (

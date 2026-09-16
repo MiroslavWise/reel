@@ -20,11 +20,9 @@ export function AuthPage({ children }: PropsWithChildren) {
 
   if (status !== AuthStatus.AUTHENTICATED) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-500">
-        Проверяем доступ...
-      </div>
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-500">Проверяем доступ...</div>
     )
   }
 
-  return <>{children}</>
+  return children
 }

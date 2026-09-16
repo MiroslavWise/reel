@@ -20,7 +20,7 @@ export function AdminPage({ children }: PropsWithChildren) {
 
   if (status === AuthStatus.PENDING || status === AuthStatus.UNAUTHENTICATED || !isAdmin) {
     return (
-      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-500">
+      <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center bg-zinc-50 px-6 text-zinc-500">
         Проверяем доступ...
       </div>
     )
