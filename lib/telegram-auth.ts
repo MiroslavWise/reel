@@ -4,6 +4,15 @@ const sessionCookieName = "telegram_session"
 const sessionMaxAge = 60 * 60 * 24 * 30
 const telegramAuthMaxAge = 60 * 60 * 24
 
+function getAdminIds() {
+  return new Set(
+    (process.env.NEXT_PUBLIC_ADMINS ?? "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean),
+  )
+}
+
 export interface TelegramUser {
   id: number
   first_name: string
@@ -47,6 +56,14 @@ export function verifyTelegramAuth(params: URLSearchParams) {
     auth_date: authDate,
   }
   return Number.isSafeInteger(user.id) && user.id > 0 && user.first_name ? user : null
+}
+
+export function isAdminTelegramId(telegramId: number) {
+  return getAdminIds().has(String(telegramId))
+}
+
+export function isAdminTelegramUser(user: Pick<TelegramUser, "id"> | null | undefined) {
+  return user ? isAdminTelegramId(user.id) : false
 }
 
 function signSession(payload: string) {
