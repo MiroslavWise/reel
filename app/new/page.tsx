@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function NewPage() {
   return (
     <AdminPage>
-      <div className="min-h-[calc(100dvh-4rem)] bg-zinc-50 px-6 py-10 text-zinc-950">
+      <div className="min-h-screen bg-zinc-50 px-6 py-10 text-zinc-950 pt-20">
         <main className="mx-auto w-full max-w-2xl py-6">
           <h2 className="text-2xl font-semibold tracking-tight">Создать колесо</h2>
           <p className="mt-2 text-zinc-600">Добавьте название и участников.</p>

@@ -27,7 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col overflow-x-hidden">
         <Header />
         <QueryProvider>
-          <main className="min-h-screen flex-1 overflow-x-hidden pt-16">{children}</main>
+          <main className="min-h-screen flex-1 overflow-x-hidden">{children}</main>
         </QueryProvider>
       </body>
     </html>
