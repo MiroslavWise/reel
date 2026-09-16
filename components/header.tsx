@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect } from "react"
-import Link from "next/link"
 
 import { AuthStatus } from "@/enum/auth"
 import { useAuthStore } from "@/stores/auth"
@@ -9,7 +8,7 @@ import { useAuthStore } from "@/stores/auth"
 import { TelegramLogin } from "./telegram-login"
 
 export function Header() {
-  const { dispatchCheckAuth, dispatchLogout, isAdmin, status, user } = useAuthStore()
+  const { dispatchCheckAuth, dispatchLogout, status, user } = useAuthStore()
 
   useEffect(() => {
     void dispatchCheckAuth()
@@ -25,13 +24,8 @@ export function Header() {
         ) : status === AuthStatus.AUTHENTICATED ? (
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-zinc-700 sm:inline">{user?.username ? `@${user.username}` : user?.first_name}</span>
-            {isAdmin && (
-              <Link className="rounded-lg bg-zinc-950 px-3 py-2 text-sm text-white transition-colors hover:bg-zinc-800" href="/new">
-                Создать
-              </Link>
-            )}
             <button
-              className="rounded-lg border border-zinc-300 px-3 py-2 text-sm transition-colors hover:bg-zinc-100"
+              className="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 transition-colors hover:bg-zinc-100"
               onClick={() => void dispatchLogout()}
               type="button"
             >
