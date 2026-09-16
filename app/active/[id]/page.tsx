@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { AdminPage } from "@/components/admin-page"
+import { AuthPage } from "@/components/auth-page"
 import { ActiveReelView } from "@/components/active-reel-view"
 
 export const metadata: Metadata = {
@@ -11,8 +11,8 @@ export default async function ActiveReelPage({ params }: { params: Promise<{ id:
   const { id } = await params
 
   return (
-    <AdminPage>
+    <AuthPage>
       <ActiveReelView id={id} />
-    </AdminPage>
+    </AuthPage>
   )
 }
