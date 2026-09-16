@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 px-6 text-zinc-950">
-      <main className="flex w-full max-w-md flex-col items-center gap-6 rounded-2xl bg-white p-10 text-center shadow-sm">
+      <main className="flex w-full max-w-md flex-col items-center gap-4 text-center sm">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Reel</h1>
           <p className="mt-2 text-zinc-600">Добро пожаловать</p>
@@ -21,7 +21,6 @@ export default function Home() {
           </Link>
         )}
         <div className="w-full border-t border-zinc-100 pt-6">
-          <h2 className="mb-3 text-left text-lg font-semibold">Мои колёса</h2>
           <ReelsList />
         </div>
       </main>

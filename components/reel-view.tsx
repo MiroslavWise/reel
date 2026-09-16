@@ -40,7 +40,10 @@ export function ReelView({ id }: { id: string }) {
             <h1 className="text-3xl font-semibold tracking-tight">{reel.name}</h1>
             <div className="mt-8 space-y-2">
               {reel.users.map((user, index) => (
-                <div className="flex items-center justify-between rounded-lg border border-zinc-200 px-4 py-3" key={`${user.name}-${index}`}>
+                <div
+                  className="flex items-center justify-between rounded-lg border border-zinc-200 px-4 py-3"
+                  key={`${user.name}-${index}`}
+                >
                   <span>{user.name}</span>
                   {user.exclude && <span className="text-sm text-zinc-500">Исключён</span>}
                 </div>

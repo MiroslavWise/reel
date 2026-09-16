@@ -19,14 +19,16 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
         <div className="flex items-center gap-5">
-          <span className="text-lg font-semibold tracking-tight">Reel</span>
-          <Link aria-label="Колёса" className="inline-flex items-center gap-2 text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-950" href="/">
+          <Link
+            aria-label="Колёса"
+            className="inline-flex items-center gap-2 text-sm font-medium text-zinc-700 transition-colors hover:text-zinc-950"
+            href="/"
+          >
             <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" />
               <circle cx="12" cy="12" r="2" stroke="currentColor" strokeWidth="1.8" />
               <path d="m12 3.5 0 6.5m0 4v6.5m8.5-8.5H14m-4 0H3.5" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
             </svg>
-            Колёса
           </Link>
         </div>
 
