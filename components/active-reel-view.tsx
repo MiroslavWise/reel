@@ -12,6 +12,9 @@ export function ActiveReelView({ id }: { id: string }) {
   const [cardWidth, setCardWidth] = useState(0)
   const [offset, setOffset] = useState(0)
   const [winnerIndex, setWinnerIndex] = useState<number | null>(null)
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [spinRound, setSpinRound] = useState(0)
+  const finishTimerRef = useRef<number | null>(null)
 
   useEffect(() => {
     const updateSizes = () => {
@@ -21,25 +24,39 @@ export function ActiveReelView({ id }: { id: string }) {
 
     updateSizes()
     window.addEventListener("resize", updateSizes)
-    return () => window.removeEventListener("resize", updateSizes)
+    return () => {
+      window.removeEventListener("resize", updateSizes)
+      if (finishTimerRef.current) window.clearTimeout(finishTimerRef.current)
+    }
   }, [reel?.users.length])
 
   const trackUsers = useMemo(() => {
     if (!reel?.users.length) return []
-    return Array.from({ length: 9 }, () => reel.users).flat()
-  }, [reel?.users])
+    return Array.from({ length: Math.max(24, spinRound + 12) }, () => reel.users).flat()
+  }, [reel?.users, spinRound])
 
   const handleSpin = async () => {
-    if (!reel || spin.isPending || !cardWidth || !viewportWidth) return
+    if (!reel || spin.isPending || isSpinning || !cardWidth || !viewportWidth) return
 
-    const result = await spin.mutateAsync()
-    const cycle = 7
-    const targetIndex = cycle * reel.users.length + result.winnerIndex
-    const gap = 12
-    const targetOffset = targetIndex * (cardWidth + gap) - (viewportWidth - cardWidth) / 2
+    setIsSpinning(true)
     setWinnerIndex(null)
-    setOffset(targetOffset)
-    window.setTimeout(() => setWinnerIndex(result.winnerIndex), 3200)
+
+    try {
+      const result = await spin.mutateAsync()
+      const cycle = 7 + spinRound
+      const targetIndex = cycle * reel.users.length + result.winnerIndex
+      const gap = 12
+      const targetOffset = targetIndex * (cardWidth + gap) - (viewportWidth - cardWidth) / 2
+
+      setOffset(targetOffset)
+      setSpinRound((round) => round + 1)
+      finishTimerRef.current = window.setTimeout(() => {
+        setWinnerIndex(result.winnerIndex)
+        setIsSpinning(false)
+      }, 4500)
+    } catch {
+      setIsSpinning(false)
+    }
   }
 
   return (
@@ -53,16 +70,23 @@ export function ActiveReelView({ id }: { id: string }) {
           <>
             <h1 className="text-3xl font-semibold tracking-tight">{reel.name}</h1>
             <p className="mt-2 text-zinc-600">Нажмите, чтобы запустить колесо</p>
-            <div className="relative mt-10">
+            <div className="relative mt-10 min-w-0">
               <div className="pointer-events-none absolute inset-y-0 left-1/2 z-10 w-1 -translate-x-1/2 bg-sky-500 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]" />
-              <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100 py-4" ref={viewportRef}>
+              <div className="w-full overflow-x-hidden overflow-y-hidden rounded-xl border border-zinc-200 bg-zinc-100 py-4" ref={viewportRef}>
                 <div
-                  className="flex gap-3 transition-transform duration-[3200ms] ease-out"
+                  className="flex w-max flex-nowrap gap-3 transition-transform duration-4500 ease-out"
                   style={{ transform: `translateX(-${offset}px)` }}
                 >
                   {trackUsers.map((user, index) => (
                     <div
-                      className="flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 text-center font-medium shadow-sm sm:w-52"
+                      className={`flex h-20 w-40 shrink-0 items-center justify-center rounded-lg border border-white/60 px-3 text-center font-medium text-zinc-950 shadow-sm sm:w-52 ${[
+                        "bg-sky-300",
+                        "bg-amber-300",
+                        "bg-emerald-300",
+                        "bg-rose-300",
+                        "bg-violet-300",
+                        "bg-orange-300",
+                      ][index % 6]}`}
                       key={`${user.name}-${index}`}
                       ref={index === 0 ? cardRef : undefined}
                     >
@@ -74,17 +98,33 @@ export function ActiveReelView({ id }: { id: string }) {
             </div>
             <button
               className="mt-8 rounded-lg bg-zinc-950 px-8 py-3 font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
-              disabled={spin.isPending}
+              disabled={spin.isPending || isSpinning}
               onClick={() => void handleSpin()}
               type="button"
             >
-              {spin.isPending ? "Готовим запуск..." : "Запустить"}
+              {spin.isPending || isSpinning ? "Колесо крутится..." : "Запустить"}
             </button>
             {spin.error && <p className="mt-4 text-red-600">{spin.error.message}</p>}
-            {winnerIndex !== null && <p className="mt-4 text-lg font-semibold">Выпал: {reel.users[winnerIndex]?.name}</p>}
           </>
         )}
       </main>
+      {winnerIndex !== null && reel && (
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-zinc-950/90 px-6 text-center text-white backdrop-blur-sm">
+          <div className="w-full max-w-xl rounded-3xl bg-linear-to-br from-sky-400 via-violet-400 to-rose-400 p-1 shadow-2xl">
+            <div className="rounded-[calc(1.5rem-4px)] bg-zinc-950 px-8 py-12 sm:px-16">
+              <p className="text-sm font-semibold uppercase tracking-[0.25em] text-sky-300">Победитель</p>
+              <h2 className="mt-5 wrap-break-word text-5xl font-black tracking-tight sm:text-7xl">{reel.users[winnerIndex]?.name}</h2>
+              <button
+                className="mt-10 rounded-lg bg-white px-6 py-3 font-semibold text-zinc-950 transition hover:bg-zinc-200"
+                onClick={() => setWinnerIndex(null)}
+                type="button"
+              >
+                Продолжить
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
