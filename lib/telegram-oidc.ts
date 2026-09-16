@@ -29,7 +29,15 @@ export function getClientId() {
   return getRequiredEnv("NEXT_PUBLIC_TELEGRAM_CLIENT_ID")
 }
 
-export function getTelegramAuthorizationUrl({ callbackUrl, codeChallenge, state }: { callbackUrl: string; codeChallenge: string; state: string }) {
+export function getTelegramAuthorizationUrl({
+  callbackUrl,
+  codeChallenge,
+  state,
+}: {
+  callbackUrl: string
+  codeChallenge: string
+  state: string
+}) {
   const params = new URLSearchParams({
     client_id: getClientId(),
     redirect_uri: callbackUrl,
@@ -83,7 +91,7 @@ export async function exchangeCodeForUser(code: string, callbackUrl: string, cod
     issuer: telegramIssuer,
     audience: getClientId(),
   })
-  const id = Number(payload.sub)
+  const id = Number(payload.id ?? payload.sub)
   const firstName = payload.given_name ?? payload.name?.split(" ")[0] ?? "Telegram user"
 
   if (!Number.isSafeInteger(id) || id <= 0) throw new Error("Invalid Telegram user id")
