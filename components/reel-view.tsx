@@ -66,7 +66,7 @@ export function ReelView({ id }: { id: string }) {
                       </div>
                       {user.exclude && (
                         <span className="rounded-full border border-rose-200 bg-rose-50 px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-rose-600">
-                          исключён
+                          •
                         </span>
                       )}
                     </div>
