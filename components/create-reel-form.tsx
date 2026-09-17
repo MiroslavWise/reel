@@ -31,7 +31,8 @@ export function CreateReelForm() {
       return
     }
 
-    window.location.assign("/")
+    const data = (await response.json()) as { id?: string }
+    window.location.assign(data.id ? `/reel/${data.id}` : "/")
   })
 
   return (

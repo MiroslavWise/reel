@@ -1,7 +1,6 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export interface ReelUser {
   name: string
@@ -26,6 +25,34 @@ export function useReel(id: string) {
   return useQuery({
     queryKey: ["reel", id],
     queryFn: () => fetchReel(id),
+  })
+}
+
+export interface AddReelUserInput {
+  name: string
+  exclude: boolean
+}
+
+async function addReelUser(id: string, input: AddReelUserInput) {
+  const response = await fetch(`/api/reels/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  })
+  const data = (await response.json()) as ReelDetails & { error?: string }
+
+  if (!response.ok) throw new Error(data.error ?? "Не удалось добавить участника")
+  return data
+}
+
+export function useAddReelUser(id: string) {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (input: AddReelUserInput) => addReelUser(id, input),
+    onSuccess: (updatedReel) => {
+      queryClient.setQueryData(["reel", id], updatedReel)
+    },
   })
 }
 
